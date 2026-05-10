@@ -1,0 +1,5 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { background: #0d0a08; color: #f5ead8; font-family: 'Josefin Sans', sans-serif; min-height: 100vh; }
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #2e231c; border-radius: 2px; }
