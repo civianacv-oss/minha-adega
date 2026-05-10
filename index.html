@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>Minha Adega IA 🍷</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Josefin+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#0d0a08;color:#f5ead8;font-family:'Josefin Sans',sans-serif;min-height:100vh}
+#app{max-width:430px;margin:0 auto;min-height:100vh;background:#0d0a08;display:flex;flex-direction:column}
+.header{padding:20px 20px 12px;background:linear-gradient(180deg,#0d0a08 60%,transparent);position:sticky;top:0;z-index:50;border-bottom:1px solid #2e231c;display:flex;align-items:center;justify-content:space-between}
+.nav{display:flex;border-bottom:1px solid #2e231c;background:#16110e}
+.nav-btn{flex:1;padding:12px 4px;font-family:'Josefin Sans',sans-serif;font-size:9px;letter-spacing:2px;text-transform:uppercase;background:none;border:none;color:#7a6a5a;cursor:pointer;border-bottom:2px solid transparent}
+.nav-btn.active{color:#c9a96e;border-bottom-color:#c9a96e}
+.content{flex:1;overflow-y:auto;padding:16px;padding-bottom:80px}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;padding:14px 24px;border-radius:8px;border:none;cursor:pointer;font-family:'Josefin Sans',sans-serif;font-size:11px;letter-spacing:3px;text-transform:uppercase;width:100%;margin-bottom:10px}
+.btn-primary{background:linear-gradient(135deg,#c9a96e,#8a6a3a);color:#0d0a08}
+.btn-danger{background:transparent;border:1px solid #8b1a1a;color:#e57373;font-size:10px;margin-top:8px}
+.alert{padding:12px 14px;border-radius:8px;font-size:11px;letter-spacing:1px;margin-bottom:12px}
+.alert-info{background:rgba(201,169,110,.1);border:1px solid rgba(201,169,110,.25);color:#c9a96e}
+.alert-err{background:rgba(139,26,26,.15);border:1px solid rgba(139,26,26,.35);color:#e57373;word-break:break-all;font-size:10px}
+.alert-ok{background:rgba(74,124,89,.15);border:1px solid rgba(74,124,89,.3);color:#81c995;margin:12px 16px 0}
+.spinner-wrap{display:flex;flex-direction:column;align-items:center;gap:12px;padding:40px;color:#7a6a5a;font-size:10px;letter-spacing:3px;text-transform:uppercase}
+.spinner{width:36px;height:36px;border:2px solid #2e231c;border-top-color:#c9a96e;border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.card{background:#1e1712;border:1px solid #2e231c;border-radius:12px;padding:16px;margin-bottom:12px}
+.tag{padding:4px 10px;border-radius:20px;font-size:9px;letter-spacing:2px;text-transform:uppercase}
+.tag-grape{background:rgba(139,26,26,.25);color:#e57373;border:1px solid rgba(139,26,26,.4)}
+.tag-year{background:rgba(201,169,110,.12);color:#c9a96e;border:1px solid rgba(201,169,110,.25)}
+.tag-type{background:rgba(255,255,255,.06);color:#7a6a5a;border:1px solid #2e231c}
+.tag-region{background:rgba(74,124,89,.15);color:#81c995;border:1px solid rgba(74,124,89,.3)}
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:100;display:flex;align-items:flex-end;justify-content:center}
+.modal{background:#16110e;border-radius:20px 20px 0 0;border:1px solid #2e231c;border-bottom:none;width:100%;max-width:430px;padding:20px;max-height:92vh;overflow-y:auto}
+.wine-item{background:#1e1712;border:1px solid #2e231c;border-radius:12px;padding:14px;margin-bottom:10px;display:flex;gap:12px;align-items:flex-start;cursor:pointer}
+.stat-box{background:rgba(255,255,255,.03);border:1px solid #2e231c;border-radius:8px;padding:10px;text-align:center}
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.stats-box{background:#1e1712;border:1px solid #2e231c;border-radius:12px;padding:16px;text-align:center}
+.empty{text-align:center;padding:60px 20px;color:#7a6a5a;font-size:11px;letter-spacing:3px;text-transform:uppercase}
+.notes-area{width:100%;background:rgba(255,255,255,.04);border:1px solid #2e231c;border-radius:8px;padding:10px;color:#f5ead8;font-size:13px;font-family:'Josefin Sans',sans-serif;resize:vertical;min-height:80px;outline:none;margin-bottom:14px}
+.qty-btn{width:32px;height:32px;border-radius:50%;border:1px solid #2e231c;background:#1e1712;color:#f5ead8;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center}
+.form-label{font-size:9px;letter-spacing:3px;color:#7a6a5a;text-transform:uppercase;margin-bottom:6px;display:block}
+::-webkit-scrollbar{width:3px}::-webkit-scrollbar-thumb{background:#2e231c;border-radius:2px}
+.serif{font-family:'Cormorant Garamond',serif}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+const APIKEY = '%%ANTHROPIC_API_KEY%%';
+const uid = () => Math.random().toString(36).slice(2,9);
+const fmt = n => n!=null ? `R$ ${Number(n).toFixed(2).replace('.',',')}` : '—';
+const fmtDate = iso => new Date(iso).toLocaleDateString('pt-BR');
+let cellar = [];
+try { cellar = JSON.parse(localStorage.getItem('adega_v4')||'[]'); } catch{}
+let tab = 'scanner', scanning = false, result = null, error = null, success = null, selected = null;
+
+function save(){ localStorage.setItem('adega_v4', JSON.stringify(cellar)); }
+
+function resizeImage(file){
+  return new Promise(resolve => {
+    const img = new Image(), url = URL.createObjectURL(file);
+    img.onload = () => {
+      URL.revokeObjectURL(url);
+      const MAX=800; let {width,height}=img;
+      if(width>MAX||height>MAX){ if(width>height){height=Math.round(height*MAX/width);width=MAX;}else{width=Math.round(width*MAX/height);height=MAX;} }
+      const c=document.createElement('canvas'); c.width=width; c.height=height;
+      c.getContext('2d').drawImage(img,0,0,width,height);
+      resolve(c.toDataURL('image/jpeg',0.8).split(',')[1]);
+    };
+    img.onerror=()=>{ const r=new FileReader(); r.onload=e=>resolve(e.target.result.split(',')[1]); r.readAsDataURL(file); };
+    img.src=url;
+  });
+}
+
+async function analisarRotulo(b64){
+  const prompt = `Você é sommelier. Analise o rótulo e retorne APENAS JSON válido:\n{"nome":"string","vinicola":"string","ano":2020,"uva":"string","tipo":"Tinto","regiao":"string","descricao":"string","harmonizacao":"string","precoMedio":120.00,"pontuacao":88,"notasAromaticas":"string","temperatura":"string"}\nCampos desconhecidos: null. SOMENTE o JSON.`;
+  const resp = await fetch('https://api.anthropic.com/v1/messages',{
+    method:'POST',
+    headers:{'Content-Type':'application/json','x-api-key':APIKEY,'anthropic-version':'2023-06-01'},
+    body:JSON.stringify({model:'claude-sonnet-4-5-20250929',max_tokens:1024,messages:[{role:'user',content:[
+      {type:'image',source:{type:'base64',media_type:'image/jpeg',data:b64}},
+      {type:'text',text:prompt}
+    ]}]})
+  });
+  const raw = await resp.text();
+  if(!resp.ok) throw new Error(`HTTP ${resp.status}: ${raw.slice(0,300)}`);
+  const data = JSON.parse(raw);
+  if(data.type==='error') throw new Error(data.error?.message);
+  const text = data.content?.find(b=>b.type==='text')?.text;
+  if(!text) throw new Error('Sem resposta da IA');
+  const match = text.replace(/```(?:json)?/g,'').trim().match(/\{[\s\S]*\}/);
+  if(!match) throw new Error('JSON não encontrado');
+  return JSON.parse(match[0]);
+}
+
+function scoreBar(score){
+  if(!score) return '';
+  const pct = Math.min(100,score);
+  return `<div style="height:4px;background:#2e231c;border-radius:2px;overflow:hidden;margin-top:4px"><div style="height:100%;width:${pct}%;background:linear-gradient(90deg,#8b1a1a,#c9a96e);border-radius:2px"></div></div>`;
+}
+
+function renderModal(wine, isNew){
+  const qty = wine.quantidade||1;
+  return `
+  <div class="modal-bg" id="modal" onclick="closeModal(event)">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div style="width:36px;height:4px;background:#2e231c;border-radius:2px;margin:0 auto 20px"></div>
+    <div style="font-size:10px;letter-spacing:3px;color:#c9a96e;text-transform:uppercase;margin-bottom:4px">${wine.vinicola||'Vinícola'}</div>
+    <div class="serif" style="font-size:22px;color:#f5ead8;margin-bottom:12px">${wine.nome||'Vinho'}</div>
+    <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px">
+      ${wine.ano?`<span class="tag tag-year">${wine.ano}</span>`:''}
+      ${wine.uva?`<span class="tag tag-grape">${wine.uva}</span>`:''}
+      ${wine.tipo?`<span class="tag tag-type">${wine.tipo}</span>`:''}
+      ${wine.regiao?`<span class="tag tag-region">${wine.regiao}</span>`:''}
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
+      <div class="stat-box">
+        <span class="serif" style="font-size:24px;color:#c9a96e;display:block">${wine.pontuacao??'—'}</span>
+        <span style="font-size:8px;letter-spacing:3px;color:#7a6a5a;text-transform:uppercase">Pontuação</span>
+        ${scoreBar(wine.pontuacao)}
+      </div>
+      <div class="stat-box">
+        <span class="serif" style="font-size:18px;color:#c9a96e;display:block">${fmt(wine.precoMedio)}</span>
+        <span style="font-size:8px;letter-spacing:3px;color:#7a6a5a;text-transform:uppercase">Preço médio</span>
+      </div>
+    </div>
+    ${wine.descricao?`<p style="font-size:12px;color:#7a6a5a;line-height:1.6;margin-bottom:12px;font-style:italic">${wine.descricao}</p>`:''}
+    ${wine.notasAromaticas?`<div class="card" style="padding:10px 14px;margin-bottom:10px"><span class="form-label">Notas aromáticas</span><span style="font-size:12px">${wine.notasAromaticas}</span></div>`:''}
+    ${wine.harmonizacao?`<div class="card" style="padding:10px 14px;margin-bottom:10px"><span class="form-label">Harmonização</span><span style="font-size:12px">${wine.harmonizacao}</span></div>`:''}
+    ${wine.temperatura?`<div style="font-size:10px;color:#7a6a5a;letter-spacing:2px;margin-bottom:14px;text-transform:uppercase">🌡 ${wine.temperatura}</div>`:''}
+    <hr style="border:none;border-top:1px solid #2e231c;margin:14px 0">
+    ${!isNew ? `
+      <div style="display:flex;justify-content:space-between;margin-bottom:12px">
+        <span style="font-size:10px;letter-spacing:2px;color:#7a6a5a">ENTRADA: ${fmtDate(wine.dataEntrada)}</span>
+        <span style="font-size:10px;letter-spacing:2px;color:#c9a96e">${wine.quantidade} garrafa(s)</span>
+      </div>
+      ${wine.notas?`<p style="font-size:12px;color:#7a6a5a;margin-bottom:12px;font-style:italic">${wine.notas}</p>`:''}
+      <button class="btn btn-danger" onclick="darBaixa('${wine.id}')">🍾 Dar baixa — retirar 1 garrafa</button>
+    ` : `
+      <span class="form-label">Quantidade de garrafas</span>
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px">
+        <button class="qty-btn" onclick="changeQty(-1)">−</button>
+        <span class="serif" id="qtyNum" style="font-size:28px;color:#c9a96e;min-width:40px;text-align:center">${qty}</span>
+        <button class="qty-btn" onclick="changeQty(1)">+</button>
+      </div>
+      <span class="form-label">Notas pessoais</span>
+      <textarea class="notes-area" id="notesInput" placeholder="Observações, presente de..."></textarea>
+      <button class="btn btn-primary" onclick="saveWine()">✦ Adicionar à adega</button>
+    `}
+  </div></div>`;
+}
+
+let currentQty = 1;
+function changeQty(d){ currentQty = Math.max(1, currentQty+d); document.getElementById('qtyNum').textContent = currentQty; }
+function closeModal(e){ if(e.target.id==='modal'){ result=null; selected=null; render(); } }
+function darBaixa(id){
+  cellar = cellar.map(w => w.id!==id ? w : w.quantidade<=1 ? null : {...w, quantidade:w.quantidade-1}).filter(Boolean);
+  save(); selected=null; showSuccess('Garrafa retirada.'); render();
+}
+function saveWine(){
+  const notes = document.getElementById('notesInput')?.value||'';
+  cellar = [{...result, id:uid(), dataEntrada:new Date().toISOString(), quantidade:currentQty, notas:notes}, ...cellar];
+  save(); result=null; currentQty=1; showSuccess(`"${result?.nome||'Vinho'}" adicionado!`); tab='cellar'; render();
+}
+let successTimer;
+function showSuccess(msg){ success=msg; render(); clearTimeout(successTimer); successTimer=setTimeout(()=>{success=null;render();},3000); }
+
+async function handleFile(e){
+  const file = e.target.files?.[0]; if(!file) return; e.target.value='';
+  scanning=true; error=null; result=null; render();
+  try {
+    const b64 = await resizeImage(file);
+    result = await analisarRotulo(b64);
+  } catch(err){ error=err.message; }
+  scanning=false; render();
+}
+
+function render(){
+  const total = cellar.reduce((s,w)=>s+(w.quantidade||1),0);
+  const avgScore = cellar.length ? Math.round(cellar.reduce((s,w)=>s+(w.pontuacao||0),0)/cellar.length) : 0;
+  const totalVal = cellar.reduce((s,w)=>s+(w.precoMedio||0)*(w.quantidade||1),0);
+
+  let html = `
+  <div class="header">
+    <div>
+      <div class="serif" style="font-size:26px;font-weight:300;letter-spacing:3px;color:#c9a96e">ADEGA</div>
+      <div style="font-size:9px;letter-spacing:4px;color:#7a6a5a;text-transform:uppercase;margin-top:2px">Minha coleção pessoal</div>
+    </div>
+    <div style="text-align:right">
+      <div class="serif" style="font-size:20px;color:#c9a96e">${total}</div>
+      <div style="font-size:11px;letter-spacing:2px;color:#8a6a3a">garrafas</div>
+    </div>
+  </div>
+  <div class="nav">
+    ${[['scanner','📷 Escanear'],['cellar','🍷 Adega'],['stats','📊 Stats']].map(([id,label])=>
+      `<button class="nav-btn${tab===id?' active':''}" onclick="setTab('${id}')">${label}</button>`
+    ).join('')}
+  </div>
+  ${success?`<div class="alert alert-ok">${success}</div>`:''}
+  <div class="content">`;
+
+  if(tab==='scanner'){
+    if(scanning){
+      html+=`<div class="spinner-wrap"><div class="spinner"></div><span>Analisando rótulo com IA...</span></div>`;
+    } else {
+      html+=`
+      <div style="text-align:center;padding:40px 0 28px">
+        <div style="font-size:64px;margin-bottom:16px">🍷</div>
+        <div class="serif" style="font-size:24px;color:#f5ead8;margin-bottom:8px">Identificar um vinho</div>
+        <div style="font-size:11px;color:#7a6a5a;line-height:1.7">Fotografe o rótulo para identificar o vinho,<br>consultar pontuação e preço médio</div>
+      </div>
+      ${error?`<div class="alert alert-err">${error}</div>`:''}
+      <label class="btn btn-primary" style="cursor:pointer">
+        📸 Fotografar ou escolher rótulo
+        <input type="file" accept="image/*" onchange="handleFile(event)" style="display:none">
+      </label>
+      <div class="alert alert-info">✦ A IA identifica o vinho, preço médio e pontuação automaticamente.</div>`;
+    }
+  }
+
+  if(tab==='cellar'){
+    if(!cellar.length) html+=`<div class="empty"><span style="font-size:48px;display:block;margin-bottom:16px;opacity:.4">🍾</span>Sua adega está vazia.</div>`;
+    else cellar.forEach(wine=>{
+      html+=`<div class="wine-item" onclick="selectWine('${wine.id}')">
+        <div style="width:4px;border-radius:2px;align-self:stretch;flex-shrink:0;background:linear-gradient(180deg,#8b1a1a,#8a6a3a)"></div>
+        <div style="flex:1;min-width:0">
+          <div class="serif" style="font-size:17px;color:#f5ead8;margin-bottom:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${wine.nome}</div>
+          <div style="font-size:9px;letter-spacing:2px;color:#8a6a3a;text-transform:uppercase">${[wine.vinicola,wine.ano,wine.uva].filter(Boolean).join(' · ')}</div>
+          <div style="margin-top:6px;display:flex;gap:6px;flex-wrap:wrap">
+            ${wine.tipo?`<span class="tag tag-type" style="font-size:8px">${wine.tipo}</span>`:''}
+            ${wine.pontuacao?`<span class="tag tag-year" style="font-size:8px">⭐ ${wine.pontuacao}</span>`:''}
+            ${wine.precoMedio?`<span class="tag tag-region" style="font-size:8px">${fmt(wine.precoMedio)}</span>`:''}
+          </div>
+        </div>
+        <div style="text-align:right;flex-shrink:0">
+          <span class="serif" style="font-size:22px;color:#c9a96e;display:block">${wine.quantidade}</span>
+          <span style="font-size:8px;letter-spacing:2px;color:#7a6a5a;text-transform:uppercase">garrafa${wine.quantidade!==1?'s':''}</span>
+          <div style="font-size:9px;color:#7a6a5a;margin-top:4px">${fmtDate(wine.dataEntrada)}</div>
+        </div>
+      </div>`;
+    });
+  }
+
+  if(tab==='stats'){
+    html+=`<div class="stats-grid">
+      ${[[cellar.length,'Rótulos'],[total,'Garrafas'],[avgScore||'—','Pontuação média'],[totalVal>0?`R$${Math.round(totalVal)}`:'—','Valor estimado']].map(([v,l])=>`
+      <div class="stats-box">
+        <span class="serif" style="font-size:32px;color:#c9a96e;display:block">${v}</span>
+        <span style="font-size:9px;letter-spacing:3px;color:#7a6a5a;text-transform:uppercase">${l}</span>
+      </div>`).join('')}
+    </div>`;
+    if(!cellar.length) html+=`<div class="empty"><span style="font-size:48px;display:block;margin-bottom:16px;opacity:.4">📊</span>Nenhum dado ainda.</div>`;
+    [...cellar].sort((a,b)=>(b.pontuacao||0)-(a.pontuacao||0)).slice(0,5).forEach((wine,i)=>{
+      html+=`<div class="wine-item" onclick="selectWine('${wine.id}')">
+        <div class="serif" style="font-size:22px;color:#8a6a3a;min-width:28px">${i+1}</div>
+        <div style="flex:1">
+          <div class="serif" style="font-size:16px;color:#f5ead8">${wine.nome}</div>
+          <div style="font-size:9px;letter-spacing:2px;color:#8a6a3a;text-transform:uppercase">${wine.vinicola} · ${wine.ano}</div>
+        </div>
+        <div style="text-align:right">
+          <span class="serif" style="font-size:22px;color:#c9a96e;display:block">${wine.pontuacao??'—'}</span>
+          <span style="font-size:8px;color:#7a6a5a;text-transform:uppercase;letter-spacing:2px">pts</span>
+        </div>
+      </div>`;
+    });
+  }
+
+  html+=`</div>`;
+
+  // Modals
+  if(result) html += renderModal(result, true);
+  if(selected){ const w=cellar.find(x=>x.id===selected); if(w) html+=renderModal(w,false); }
+
+  document.getElementById('app').innerHTML = html;
+}
+
+function setTab(t){ tab=t; result=null; error=null; render(); }
+function selectWine(id){ selected=id; render(); }
+
+render();
+</script>
+</body>
+</html>
