@@ -48,15 +48,14 @@ html,body{background:#0d0a08;color:#f5ead8;font-family:'Josefin Sans',sans-serif
 <body>
 <div id="app"></div>
 <script>
-const APIKEY = '%%ANTHROPIC_API_KEY%%';
 const uid = () => Math.random().toString(36).slice(2,9);
 const fmt = n => n!=null ? `R$ ${Number(n).toFixed(2).replace('.',',')}` : '—';
 const fmtDate = iso => new Date(iso).toLocaleDateString('pt-BR');
 let cellar = [];
-try { cellar = JSON.parse(localStorage.getItem('adega_v4')||'[]'); } catch{}
+try { cellar = JSON.parse(localStorage.getItem('adega_v5')||'[]'); } catch{}
 let tab = 'scanner', scanning = false, result = null, error = null, success = null, selected = null;
 
-function save(){ localStorage.setItem('adega_v4', JSON.stringify(cellar)); }
+function save(){ localStorage.setItem('adega_v5', JSON.stringify(cellar)); }
 
 function resizeImage(file){
   return new Promise(resolve => {
@@ -75,24 +74,14 @@ function resizeImage(file){
 }
 
 async function analisarRotulo(b64){
-  const prompt = `Você é sommelier. Analise o rótulo e retorne APENAS JSON válido:\n{"nome":"string","vinicola":"string","ano":2020,"uva":"string","tipo":"Tinto","regiao":"string","descricao":"string","harmonizacao":"string","precoMedio":120.00,"pontuacao":88,"notasAromaticas":"string","temperatura":"string"}\nCampos desconhecidos: null. SOMENTE o JSON.`;
-  const resp = await fetch('https://api.anthropic.com/v1/messages',{
-    method:'POST',
-    headers:{'Content-Type':'application/json','x-api-key':APIKEY,'anthropic-version':'2023-06-01'},
-    body:JSON.stringify({model:'claude-sonnet-4-5-20250929',max_tokens:1024,messages:[{role:'user',content:[
-      {type:'image',source:{type:'base64',media_type:'image/jpeg',data:b64}},
-      {type:'text',text:prompt}
-    ]}]})
+  const resp = await fetch('/api/analisar', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ image: b64 })
   });
-  const raw = await resp.text();
-  if(!resp.ok) throw new Error(`HTTP ${resp.status}: ${raw.slice(0,300)}`);
-  const data = JSON.parse(raw);
-  if(data.type==='error') throw new Error(data.error?.message);
-  const text = data.content?.find(b=>b.type==='text')?.text;
-  if(!text) throw new Error('Sem resposta da IA');
-  const match = text.replace(/```(?:json)?/g,'').trim().match(/\{[\s\S]*\}/);
-  if(!match) throw new Error('JSON não encontrado');
-  return JSON.parse(match[0]);
+  const data = await resp.json();
+  if (data.error) throw new Error(data.error);
+  return data;
 }
 
 function scoreBar(score){
@@ -102,7 +91,6 @@ function scoreBar(score){
 }
 
 function renderModal(wine, isNew){
-  const qty = wine.quantidade||1;
   return `
   <div class="modal-bg" id="modal" onclick="closeModal(event)">
   <div class="modal" onclick="event.stopPropagation()">
@@ -142,7 +130,7 @@ function renderModal(wine, isNew){
       <span class="form-label">Quantidade de garrafas</span>
       <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px">
         <button class="qty-btn" onclick="changeQty(-1)">−</button>
-        <span class="serif" id="qtyNum" style="font-size:28px;color:#c9a96e;min-width:40px;text-align:center">${qty}</span>
+        <span class="serif" id="qtyNum" style="font-size:28px;color:#c9a96e;min-width:40px;text-align:center">${wine.quantidade||1}</span>
         <button class="qty-btn" onclick="changeQty(1)">+</button>
       </div>
       <span class="form-label">Notas pessoais</span>
@@ -161,8 +149,9 @@ function darBaixa(id){
 }
 function saveWine(){
   const notes = document.getElementById('notesInput')?.value||'';
-  cellar = [{...result, id:uid(), dataEntrada:new Date().toISOString(), quantidade:currentQty, notas:notes}, ...cellar];
-  save(); result=null; currentQty=1; showSuccess(`"${result?.nome||'Vinho'}" adicionado!`); tab='cellar'; render();
+  const entry = {...result, id:uid(), dataEntrada:new Date().toISOString(), quantidade:currentQty, notas:notes};
+  cellar = [entry, ...cellar];
+  save(); result=null; currentQty=1; showSuccess(`"${entry.nome||'Vinho'}" adicionado!`); tab='cellar'; render();
 }
 let successTimer;
 function showSuccess(msg){ success=msg; render(); clearTimeout(successTimer); successTimer=setTimeout(()=>{success=null;render();},3000); }
@@ -255,10 +244,8 @@ function render(){
     [...cellar].sort((a,b)=>(b.pontuacao||0)-(a.pontuacao||0)).slice(0,5).forEach((wine,i)=>{
       html+=`<div class="wine-item" onclick="selectWine('${wine.id}')">
         <div class="serif" style="font-size:22px;color:#8a6a3a;min-width:28px">${i+1}</div>
-        <div style="flex:1">
-          <div class="serif" style="font-size:16px;color:#f5ead8">${wine.nome}</div>
-          <div style="font-size:9px;letter-spacing:2px;color:#8a6a3a;text-transform:uppercase">${wine.vinicola} · ${wine.ano}</div>
-        </div>
+        <div style="flex:1"><div class="serif" style="font-size:16px;color:#f5ead8">${wine.nome}</div>
+        <div style="font-size:9px;letter-spacing:2px;color:#8a6a3a;text-transform:uppercase">${wine.vinicola} · ${wine.ano}</div></div>
         <div style="text-align:right">
           <span class="serif" style="font-size:22px;color:#c9a96e;display:block">${wine.pontuacao??'—'}</span>
           <span style="font-size:8px;color:#7a6a5a;text-transform:uppercase;letter-spacing:2px">pts</span>
@@ -268,8 +255,6 @@ function render(){
   }
 
   html+=`</div>`;
-
-  // Modals
   if(result) html += renderModal(result, true);
   if(selected){ const w=cellar.find(x=>x.id===selected); if(w) html+=renderModal(w,false); }
 
