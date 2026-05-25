@@ -5,44 +5,102 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <title>Minha Adega IA 🍷</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Josefin+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Josefin+Sans:wght@300;400;600&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html,body{background:#0d0a08;color:#f5ead8;font-family:'Josefin Sans',sans-serif;min-height:100vh}
-#app{max-width:430px;margin:0 auto;min-height:100vh;background:#0d0a08;display:flex;flex-direction:column}
-.header{padding:20px 20px 12px;background:linear-gradient(180deg,#0d0a08 60%,transparent);position:sticky;top:0;z-index:50;border-bottom:1px solid #2e231c;display:flex;align-items:center;justify-content:space-between}
-.nav{display:flex;border-bottom:1px solid #2e231c;background:#16110e}
-.nav-btn{flex:1;padding:12px 4px;font-family:'Josefin Sans',sans-serif;font-size:9px;letter-spacing:2px;text-transform:uppercase;background:none;border:none;color:#7a6a5a;cursor:pointer;border-bottom:2px solid transparent}
-.nav-btn.active{color:#c9a96e;border-bottom-color:#c9a96e}
+html,body{background:#0a0810;color:#e8dcc8;font-family:'Josefin Sans',sans-serif;min-height:100vh}
+#app{max-width:430px;margin:0 auto;min-height:100vh;background:#0a0810;display:flex;flex-direction:column;position:relative}
+
+/* Header */
+.header{padding:20px 20px 14px;background:linear-gradient(180deg,#0a081099 80%,transparent);position:sticky;top:0;z-index:50;border-bottom:1px solid #c9a84c22;backdrop-filter:blur(12px);display:flex;align-items:center;justify-content:space-between}
+.header-title{font-family:'Playfair Display',serif;font-size:24px;font-weight:700;background:linear-gradient(90deg,#e8dcc8,#c9a84c);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:1px}
+.header-sub{font-size:9px;letter-spacing:3px;color:#665a4e;text-transform:uppercase;margin-top:2px}
+
+/* Nav */
+.nav{display:flex;border-bottom:1px solid #c9a84c1a;background:#0f0d12}
+.nav-btn{flex:1;padding:13px 4px;font-family:'Josefin Sans',sans-serif;font-size:9px;letter-spacing:2px;text-transform:uppercase;background:none;border:none;color:#665a4e;cursor:pointer;border-bottom:2px solid transparent;transition:all .2s}
+.nav-btn.active{color:#c9a84c;border-bottom-color:#c9a84c}
+
+/* Content */
 .content{flex:1;overflow-y:auto;padding:16px;padding-bottom:80px}
-.btn{display:flex;align-items:center;justify-content:center;gap:8px;padding:14px 24px;border-radius:8px;border:none;cursor:pointer;font-family:'Josefin Sans',sans-serif;font-size:11px;letter-spacing:3px;text-transform:uppercase;width:100%;margin-bottom:10px}
-.btn-primary{background:linear-gradient(135deg,#c9a96e,#8a6a3a);color:#0d0a08}
-.btn-danger{background:transparent;border:1px solid #8b1a1a;color:#e57373;font-size:10px;margin-top:8px}
-.alert{padding:12px 14px;border-radius:8px;font-size:11px;letter-spacing:1px;margin-bottom:12px}
-.alert-info{background:rgba(201,169,110,.1);border:1px solid rgba(201,169,110,.25);color:#c9a96e}
-.alert-err{background:rgba(139,26,26,.15);border:1px solid rgba(139,26,26,.35);color:#e57373;word-break:break-all;font-size:10px}
-.alert-ok{background:rgba(74,124,89,.15);border:1px solid rgba(74,124,89,.3);color:#81c995;margin:12px 16px 0}
-.spinner-wrap{display:flex;flex-direction:column;align-items:center;gap:12px;padding:40px;color:#7a6a5a;font-size:10px;letter-spacing:3px;text-transform:uppercase}
-.spinner{width:36px;height:36px;border:2px solid #2e231c;border-top-color:#c9a96e;border-radius:50%;animation:spin .8s linear infinite}
+
+/* Buttons */
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;padding:15px 24px;border-radius:12px;border:none;cursor:pointer;font-family:'Josefin Sans',sans-serif;font-size:11px;letter-spacing:3px;text-transform:uppercase;width:100%;margin-bottom:10px;transition:all .2s}
+.btn-primary{background:linear-gradient(135deg,#c9a84c,#8a6a2a);color:#0a0810;font-weight:600}
+.btn-primary:active{transform:scale(.98)}
+.btn-danger{background:transparent;border:1px solid #7b2d3e;color:#e57373;font-size:10px;margin-top:8px}
+
+/* Alerts */
+.alert{padding:12px 14px;border-radius:10px;font-size:11px;letter-spacing:1px;margin-bottom:12px}
+.alert-info{background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.2);color:#c9a84c}
+.alert-err{background:rgba(123,45,62,.15);border:1px solid rgba(123,45,62,.35);color:#e57373;word-break:break-all;font-size:10px}
+.alert-ok{background:rgba(74,124,89,.15);border:1px solid rgba(74,124,89,.3);color:#81c995;margin:12px 16px 0;border-radius:10px}
+
+/* Spinner */
+.spinner-wrap{display:flex;flex-direction:column;align-items:center;gap:12px;padding:60px 20px;color:#665a4e;font-size:10px;letter-spacing:3px;text-transform:uppercase}
+.spinner{width:40px;height:40px;border:2px solid #c9a84c22;border-top-color:#c9a84c;border-radius:50%;animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
-.card{background:#1e1712;border:1px solid #2e231c;border-radius:12px;padding:16px;margin-bottom:12px}
-.tag{padding:4px 10px;border-radius:20px;font-size:9px;letter-spacing:2px;text-transform:uppercase}
-.tag-grape{background:rgba(139,26,26,.25);color:#e57373;border:1px solid rgba(139,26,26,.4)}
-.tag-year{background:rgba(201,169,110,.12);color:#c9a96e;border:1px solid rgba(201,169,110,.25)}
-.tag-type{background:rgba(255,255,255,.06);color:#7a6a5a;border:1px solid #2e231c}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes bounce{0%,100%{transform:translateY(0);opacity:.4}50%{transform:translateY(-5px);opacity:1}}
+
+/* Cards */
+.card{background:#1a1218;border:1px solid #2a1e28;border-radius:12px;padding:16px;margin-bottom:12px}
+.wine-item{background:linear-gradient(160deg,#1a1218,#130f15);border:1px solid #2a1e2844;border-radius:14px;padding:14px;margin-bottom:10px;display:flex;gap:12px;align-items:flex-start;cursor:pointer;transition:all .25s;animation:fadeIn .3s ease}
+.wine-item:active{transform:scale(.98)}
+
+/* Tags */
+.tag{padding:3px 10px;border-radius:20px;font-size:9px;letter-spacing:2px;text-transform:uppercase}
+.tag-grape{background:rgba(123,45,62,.25);color:#e57373;border:1px solid rgba(123,45,62,.4)}
+.tag-year{background:rgba(201,168,76,.12);color:#c9a84c;border:1px solid rgba(201,168,76,.25)}
+.tag-type{background:rgba(255,255,255,.05);color:#8a7a6a;border:1px solid #2a1e28}
 .tag-region{background:rgba(74,124,89,.15);color:#81c995;border:1px solid rgba(74,124,89,.3)}
-.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:100;display:flex;align-items:flex-end;justify-content:center}
-.modal{background:#16110e;border-radius:20px 20px 0 0;border:1px solid #2e231c;border-bottom:none;width:100%;max-width:430px;padding:20px;max-height:92vh;overflow-y:auto}
-.wine-item{background:#1e1712;border:1px solid #2e231c;border-radius:12px;padding:14px;margin-bottom:10px;display:flex;gap:12px;align-items:flex-start;cursor:pointer}
-.stat-box{background:rgba(255,255,255,.03);border:1px solid #2e231c;border-radius:8px;padding:10px;text-align:center}
+
+/* Modal */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:100;display:flex;align-items:flex-end;justify-content:center;backdrop-filter:blur(6px)}
+.modal{background:linear-gradient(160deg,#1e1520,#120f14);border-radius:24px 24px 0 0;border:1px solid #c9a84c22;border-bottom:none;width:100%;max-width:430px;padding:20px 20px 32px;max-height:92vh;overflow-y:auto;animation:slideUp .3s ease}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+
+/* Stats */
 .stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
-.stats-box{background:#1e1712;border:1px solid #2e231c;border-radius:12px;padding:16px;text-align:center}
-.empty{text-align:center;padding:60px 20px;color:#7a6a5a;font-size:11px;letter-spacing:3px;text-transform:uppercase}
-.notes-area{width:100%;background:rgba(255,255,255,.04);border:1px solid #2e231c;border-radius:8px;padding:10px;color:#f5ead8;font-size:13px;font-family:'Josefin Sans',sans-serif;resize:vertical;min-height:80px;outline:none;margin-bottom:14px}
-.qty-btn{width:32px;height:32px;border-radius:50%;border:1px solid #2e231c;background:#1e1712;color:#f5ead8;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center}
-.form-label{font-size:9px;letter-spacing:3px;color:#7a6a5a;text-transform:uppercase;margin-bottom:6px;display:block}
-::-webkit-scrollbar{width:3px}::-webkit-scrollbar-thumb{background:#2e231c;border-radius:2px}
-.serif{font-family:'Cormorant Garamond',serif}
+.stats-box{background:linear-gradient(160deg,#1a1218,#130f15);border:1px solid #2a1e28;border-radius:14px;padding:18px;text-align:center}
+
+/* Score bar */
+.score-bar-bg{height:4px;background:#2a1e28;border-radius:2px;overflow:hidden;margin-top:4px}
+.score-bar-fill{height:100%;background:linear-gradient(90deg,#7b2d3e,#c9a84c);border-radius:2px}
+
+/* Stat box */
+.stat-box{background:rgba(255,255,255,.03);border:1px solid #2a1e28;border-radius:10px;padding:12px;text-align:center}
+
+/* QTY */
+.qty-btn{width:34px;height:34px;border-radius:50%;border:1px solid #2a1e28;background:#1a1218;color:#e8dcc8;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;transition:all .2s}
+
+/* Notes */
+.notes-area{width:100%;background:rgba(255,255,255,.04);border:1px solid #2a1e28;border-radius:10px;padding:12px;color:#e8dcc8;font-size:13px;font-family:'Josefin Sans',sans-serif;resize:vertical;min-height:80px;outline:none;margin-bottom:14px}
+.form-label{font-size:9px;letter-spacing:3px;color:#665a4e;text-transform:uppercase;margin-bottom:6px;display:block}
+
+/* Chat */
+.chat-wrap{display:flex;flex-direction:column;height:calc(100vh - 160px);min-height:360px}
+.chat-messages{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:12px;padding-bottom:8px}
+.chat-bubble{max-width:88%;padding:12px 15px;font-family:'Cormorant Garamond',serif;font-size:15px;line-height:1.6;animation:fadeIn .25s ease}
+.bubble-ai{align-self:flex-start;background:#1e1a22;border:1px solid #2a1e2844;border-radius:18px 18px 18px 4px;color:#e8dcc8}
+.bubble-user{align-self:flex-end;background:linear-gradient(135deg,#7b2d3e,#5a1f2d);border-radius:18px 18px 4px 18px;color:#e8dcc8}
+.chat-input-row{display:flex;gap:8px;padding-top:12px;border-top:1px solid #ffffff08}
+.chat-input{flex:1;background:#ffffff08;border:1px solid #ffffff15;border-radius:12px;padding:12px 15px;color:#e8dcc8;font-family:'Josefin Sans',sans-serif;font-size:13px;outline:none;-webkit-appearance:none}
+.chat-send{background:linear-gradient(135deg,#c9a84c,#9c7a2c);border:none;border-radius:12px;padding:12px 18px;color:#0a0810;cursor:pointer;font-size:17px;font-weight:bold;transition:all .2s;flex-shrink:0}
+.chat-send:disabled{background:#2a1e28;color:#665a4e;cursor:not-allowed}
+.typing-dots{display:flex;gap:5px;padding:14px 16px;align-self:flex-start;background:#1e1a22;border:1px solid #2a1e2844;border-radius:18px 18px 18px 4px}
+.typing-dot{width:6px;height:6px;background:#c9a84c;border-radius:50%;animation:bounce 1s infinite}
+
+/* Scrollbar */
+::-webkit-scrollbar{width:3px}
+::-webkit-scrollbar-thumb{background:#c9a84c33;border-radius:2px}
+
+.serif{font-family:'Playfair Display',serif}
+.empty{text-align:center;padding:60px 20px;color:#665a4e;font-size:11px;letter-spacing:3px;text-transform:uppercase}
+
+/* Scanner hero */
+.scanner-hero{text-align:center;padding:40px 0 28px;animation:fadeIn .4s ease}
+.scanner-icon{font-size:72px;margin-bottom:20px;filter:drop-shadow(0 0 20px #c9a84c44)}
 </style>
 </head>
 <body>
@@ -51,11 +109,16 @@ html,body{background:#0d0a08;color:#f5ead8;font-family:'Josefin Sans',sans-serif
 const uid = () => Math.random().toString(36).slice(2,9);
 const fmt = n => n!=null ? `R$ ${Number(n).toFixed(2).replace('.',',')}` : '—';
 const fmtDate = iso => new Date(iso).toLocaleDateString('pt-BR');
-let cellar = [];
-try { cellar = JSON.parse(localStorage.getItem('adega_v5')||'[]'); } catch{}
-let tab = 'scanner', scanning = false, result = null, error = null, success = null, selected = null;
 
-function save(){ localStorage.setItem('adega_v5', JSON.stringify(cellar)); }
+let cellar = [];
+try { cellar = JSON.parse(localStorage.getItem('adega_v6')||'[]'); } catch{}
+
+let tab = 'scanner', scanning = false, result = null, error = null, success = null, selected = null;
+let chatMessages = [{ role:'ai', text:'Olá! Sou seu sommelier virtual. Posso recomendar vinhos da sua adega, sugerir harmonizações ou tirar dúvidas sobre vinhos. Como posso ajudar?' }];
+let chatInput = '', chatLoading = false;
+let currentQty = 1;
+
+function save(){ localStorage.setItem('adega_v6', JSON.stringify(cellar)); }
 
 function resizeImage(file){
   return new Promise(resolve => {
@@ -75,84 +138,130 @@ function resizeImage(file){
 
 async function analisarRotulo(b64){
   const resp = await fetch('/api/analisar', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    method:'POST', headers:{'Content-Type':'application/json'},
     body: JSON.stringify({ image: b64 })
   });
   const data = await resp.json();
-  if (data.error) throw new Error(data.error);
+  if(data.error) throw new Error(data.error);
   return data;
+}
+
+async function sendChat(){
+  const msg = document.getElementById('chatInput')?.value?.trim();
+  if(!msg || chatLoading) return;
+  document.getElementById('chatInput').value = '';
+  chatMessages.push({ role:'user', text:msg });
+  chatLoading = true;
+  renderChatMessages();
+
+  const wineCtx = cellar.map(w =>
+    `- ${w.nome} (${w.tipo||''}, ${w.vinicola||''}, ${w.ano||''}, ${w.uva||''}): ${w.descricao||w.notasAromaticas||''} | Estoque: ${w.quantidade} un. | R$ ${w.precoMedio||'?'} | Pontuação: ${w.pontuacao||'?'}`
+  ).join('\n');
+
+  const systemPrompt = `Você é um sommelier especialista. Fale de forma elegante e acessível, sempre em português brasileiro. Responda de forma concisa (máximo 3 parágrafos curtos). Adega atual:\n${wineCtx||'Adega vazia - usuário ainda não cadastrou vinhos.'}`;
+
+  try {
+    const history = chatMessages.slice(0,-1).map(m=>({ role: m.role==='ai'?'assistant':'user', content: m.text }));
+    const resp = await fetch('/api/analisar', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ chat: true, system: systemPrompt, messages: [...history, { role:'user', content: msg }] })
+    });
+    const data = await resp.json();
+    chatMessages.push({ role:'ai', text: data.text || 'Desculpe, não consegui responder.' });
+  } catch {
+    chatMessages.push({ role:'ai', text:'Erro ao conectar. Tente novamente.' });
+  }
+  chatLoading = false;
+  renderChatMessages();
+}
+
+function renderChatMessages(){
+  const wrap = document.getElementById('chatMessages');
+  if(!wrap) return;
+  let html = '';
+  chatMessages.forEach(m => {
+    html += `<div class="chat-bubble ${m.role==='ai'?'bubble-ai':'bubble-user'}">${m.text}</div>`;
+  });
+  if(chatLoading){
+    html += `<div class="typing-dots"><div class="typing-dot" style="animation-delay:0s"></div><div class="typing-dot" style="animation-delay:.2s"></div><div class="typing-dot" style="animation-delay:.4s"></div></div>`;
+  }
+  wrap.innerHTML = html;
+  wrap.scrollTop = wrap.scrollHeight;
 }
 
 function scoreBar(score){
   if(!score) return '';
   const pct = Math.min(100,score);
-  return `<div style="height:4px;background:#2e231c;border-radius:2px;overflow:hidden;margin-top:4px"><div style="height:100%;width:${pct}%;background:linear-gradient(90deg,#8b1a1a,#c9a96e);border-radius:2px"></div></div>`;
+  return `<div class="score-bar-bg"><div class="score-bar-fill" style="width:${pct}%"></div></div>`;
 }
 
 function renderModal(wine, isNew){
   return `
   <div class="modal-bg" id="modal" onclick="closeModal(event)">
   <div class="modal" onclick="event.stopPropagation()">
-    <div style="width:36px;height:4px;background:#2e231c;border-radius:2px;margin:0 auto 20px"></div>
-    <div style="font-size:10px;letter-spacing:3px;color:#c9a96e;text-transform:uppercase;margin-bottom:4px">${wine.vinicola||'Vinícola'}</div>
-    <div class="serif" style="font-size:22px;color:#f5ead8;margin-bottom:12px">${wine.nome||'Vinho'}</div>
-    <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px">
+    <div style="width:40px;height:4px;background:#c9a84c33;border-radius:2px;margin:0 auto 22px"></div>
+    <div style="font-size:10px;letter-spacing:3px;color:#c9a84c;text-transform:uppercase;margin-bottom:4px;font-family:'Josefin Sans',sans-serif">${wine.vinicola||'Vinícola'}</div>
+    <div class="serif" style="font-size:24px;color:#e8dcc8;margin-bottom:12px;line-height:1.2">${wine.nome||'Vinho'}</div>
+    <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px">
       ${wine.ano?`<span class="tag tag-year">${wine.ano}</span>`:''}
       ${wine.uva?`<span class="tag tag-grape">${wine.uva}</span>`:''}
       ${wine.tipo?`<span class="tag tag-type">${wine.tipo}</span>`:''}
       ${wine.regiao?`<span class="tag tag-region">${wine.regiao}</span>`:''}
     </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px">
       <div class="stat-box">
-        <span class="serif" style="font-size:24px;color:#c9a96e;display:block">${wine.pontuacao??'—'}</span>
-        <span style="font-size:8px;letter-spacing:3px;color:#7a6a5a;text-transform:uppercase">Pontuação</span>
+        <span class="serif" style="font-size:28px;color:#c9a84c;display:block">${wine.pontuacao??'—'}</span>
+        <span style="font-size:8px;letter-spacing:3px;color:#665a4e;text-transform:uppercase">Pontuação</span>
         ${scoreBar(wine.pontuacao)}
       </div>
       <div class="stat-box">
-        <span class="serif" style="font-size:18px;color:#c9a96e;display:block">${fmt(wine.precoMedio)}</span>
-        <span style="font-size:8px;letter-spacing:3px;color:#7a6a5a;text-transform:uppercase">Preço médio</span>
+        <span class="serif" style="font-size:20px;color:#c9a84c;display:block">${fmt(wine.precoMedio)}</span>
+        <span style="font-size:8px;letter-spacing:3px;color:#665a4e;text-transform:uppercase">Preço médio</span>
       </div>
     </div>
-    ${wine.descricao?`<p style="font-size:12px;color:#7a6a5a;line-height:1.6;margin-bottom:12px;font-style:italic">${wine.descricao}</p>`:''}
-    ${wine.notasAromaticas?`<div class="card" style="padding:10px 14px;margin-bottom:10px"><span class="form-label">Notas aromáticas</span><span style="font-size:12px">${wine.notasAromaticas}</span></div>`:''}
-    ${wine.harmonizacao?`<div class="card" style="padding:10px 14px;margin-bottom:10px"><span class="form-label">Harmonização</span><span style="font-size:12px">${wine.harmonizacao}</span></div>`:''}
-    ${wine.temperatura?`<div style="font-size:10px;color:#7a6a5a;letter-spacing:2px;margin-bottom:14px;text-transform:uppercase">🌡 ${wine.temperatura}</div>`:''}
-    <hr style="border:none;border-top:1px solid #2e231c;margin:14px 0">
+    ${wine.descricao?`<p style="font-size:13px;color:#8a7a6a;line-height:1.7;margin-bottom:14px;font-family:'Cormorant Garamond',serif;font-style:italic">${wine.descricao}</p>`:''}
+    ${wine.notasAromaticas?`<div class="card" style="padding:10px 14px;margin-bottom:10px"><span class="form-label">Notas aromáticas</span><span style="font-size:13px;font-family:'Cormorant Garamond',serif">${wine.notasAromaticas}</span></div>`:''}
+    ${wine.harmonizacao?`<div class="card" style="padding:10px 14px;margin-bottom:10px"><span class="form-label">Harmonização</span><span style="font-size:13px;font-family:'Cormorant Garamond',serif">${wine.harmonizacao}</span></div>`:''}
+    ${wine.temperatura?`<div style="font-size:10px;color:#665a4e;letter-spacing:2px;margin-bottom:14px;text-transform:uppercase">🌡 ${wine.temperatura}</div>`:''}
+    <hr style="border:none;border-top:1px solid #c9a84c15;margin:14px 0">
     ${!isNew ? `
       <div style="display:flex;justify-content:space-between;margin-bottom:12px">
-        <span style="font-size:10px;letter-spacing:2px;color:#7a6a5a">ENTRADA: ${fmtDate(wine.dataEntrada)}</span>
-        <span style="font-size:10px;letter-spacing:2px;color:#c9a96e">${wine.quantidade} garrafa(s)</span>
+        <span style="font-size:10px;letter-spacing:2px;color:#665a4e">ENTRADA: ${fmtDate(wine.dataEntrada)}</span>
+        <span style="font-size:10px;letter-spacing:2px;color:#c9a84c">${wine.quantidade} garrafa${wine.quantidade!==1?'s':''}</span>
       </div>
-      ${wine.notas?`<p style="font-size:12px;color:#7a6a5a;margin-bottom:12px;font-style:italic">${wine.notas}</p>`:''}
+      ${wine.notas?`<p style="font-size:13px;color:#8a7a6a;margin-bottom:14px;font-family:'Cormorant Garamond',serif;font-style:italic">"${wine.notas}"</p>`:''}
       <button class="btn btn-danger" onclick="darBaixa('${wine.id}')">🍾 Dar baixa — retirar 1 garrafa</button>
     ` : `
       <span class="form-label">Quantidade de garrafas</span>
-      <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px">
+      <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px">
         <button class="qty-btn" onclick="changeQty(-1)">−</button>
-        <span class="serif" id="qtyNum" style="font-size:28px;color:#c9a96e;min-width:40px;text-align:center">${wine.quantidade||1}</span>
+        <span class="serif" id="qtyNum" style="font-size:32px;color:#c9a84c;min-width:40px;text-align:center">${currentQty}</span>
         <button class="qty-btn" onclick="changeQty(1)">+</button>
       </div>
       <span class="form-label">Notas pessoais</span>
-      <textarea class="notes-area" id="notesInput" placeholder="Observações, presente de..."></textarea>
+      <textarea class="notes-area" id="notesInput" placeholder="Observações, ocasião de compra..."></textarea>
       <button class="btn btn-primary" onclick="saveWine()">✦ Adicionar à adega</button>
     `}
   </div></div>`;
 }
 
-let currentQty = 1;
-function changeQty(d){ currentQty = Math.max(1, currentQty+d); document.getElementById('qtyNum').textContent = currentQty; }
+function changeQty(d){ currentQty = Math.max(1, currentQty+d); const el=document.getElementById('qtyNum'); if(el) el.textContent=currentQty; }
 function closeModal(e){ if(e.target.id==='modal'){ result=null; selected=null; render(); } }
+
 function darBaixa(id){
   cellar = cellar.map(w => w.id!==id ? w : w.quantidade<=1 ? null : {...w, quantidade:w.quantidade-1}).filter(Boolean);
-  save(); selected=null; showSuccess('Garrafa retirada.'); render();
+  save(); selected=null; showSuccess('Garrafa retirada da adega.'); render();
 }
+
 function saveWine(){
   const notes = document.getElementById('notesInput')?.value||'';
   const entry = {...result, id:uid(), dataEntrada:new Date().toISOString(), quantidade:currentQty, notas:notes};
   cellar = [entry, ...cellar];
-  save(); result=null; currentQty=1; showSuccess(`"${entry.nome||'Vinho'}" adicionado!`); tab='cellar'; render();
+  save(); result=null; currentQty=1;
+  showSuccess(`"${entry.nome||'Vinho'}" adicionado com sucesso!`);
+  tab='cellar'; render();
 }
+
 let successTimer;
 function showSuccess(msg){ success=msg; render(); clearTimeout(successTimer); successTimer=setTimeout(()=>{success=null;render();},3000); }
 
@@ -162,7 +271,7 @@ async function handleFile(e){
   try {
     const b64 = await resizeImage(file);
     result = await analisarRotulo(b64);
-  } catch(err){ error=err.message; }
+  } catch(err){ error=err.message||'Erro ao analisar. Tente outra foto.'; }
   scanning=false; render();
 }
 
@@ -174,84 +283,122 @@ function render(){
   let html = `
   <div class="header">
     <div>
-      <div class="serif" style="font-size:26px;font-weight:300;letter-spacing:3px;color:#c9a96e">ADEGA</div>
-      <div style="font-size:9px;letter-spacing:4px;color:#7a6a5a;text-transform:uppercase;margin-top:2px">Minha coleção pessoal</div>
+      <div class="header-title">🍷 Minha Adega</div>
+      <div class="header-sub">Coleção particular</div>
     </div>
     <div style="text-align:right">
-      <div class="serif" style="font-size:20px;color:#c9a96e">${total}</div>
-      <div style="font-size:11px;letter-spacing:2px;color:#8a6a3a">garrafas</div>
+      <div class="serif" style="font-size:22px;color:#c9a84c;font-weight:700">${total}</div>
+      <div style="font-size:9px;letter-spacing:2px;color:#665a4e;text-transform:uppercase">garrafas</div>
     </div>
   </div>
   <div class="nav">
-    ${[['scanner','📷 Escanear'],['cellar','🍷 Adega'],['stats','📊 Stats']].map(([id,label])=>
+    ${[['scanner','📷 Escanear'],['cellar','🍷 Adega'],['sommelier','✨ Sommelier'],['stats','📊 Stats']].map(([id,label])=>
       `<button class="nav-btn${tab===id?' active':''}" onclick="setTab('${id}')">${label}</button>`
     ).join('')}
   </div>
   ${success?`<div class="alert alert-ok">${success}</div>`:''}
   <div class="content">`;
 
+  /* ── SCANNER ── */
   if(tab==='scanner'){
     if(scanning){
       html+=`<div class="spinner-wrap"><div class="spinner"></div><span>Analisando rótulo com IA...</span></div>`;
     } else {
       html+=`
-      <div style="text-align:center;padding:40px 0 28px">
-        <div style="font-size:64px;margin-bottom:16px">🍷</div>
-        <div class="serif" style="font-size:24px;color:#f5ead8;margin-bottom:8px">Identificar um vinho</div>
-        <div style="font-size:11px;color:#7a6a5a;line-height:1.7">Fotografe o rótulo para identificar o vinho,<br>consultar pontuação e preço médio</div>
+      <div class="scanner-hero">
+        <div class="scanner-icon">🍷</div>
+        <div class="serif" style="font-size:26px;color:#e8dcc8;margin-bottom:10px">Identificar vinho</div>
+        <div style="font-size:12px;color:#665a4e;line-height:1.8;letter-spacing:.5px">Fotografe o rótulo para identificar o vinho,<br>pontuação e preço médio automaticamente</div>
       </div>
       ${error?`<div class="alert alert-err">${error}</div>`:''}
       <label class="btn btn-primary" style="cursor:pointer">
         📸 Fotografar ou escolher rótulo
         <input type="file" accept="image/*" onchange="handleFile(event)" style="display:none">
       </label>
-      <div class="alert alert-info">✦ A IA identifica o vinho, preço médio e pontuação automaticamente.</div>`;
+      <div class="alert alert-info">✦ A IA identifica o vinho, pontuação e preço médio automaticamente via Claude.</div>`;
     }
   }
 
+  /* ── ADEGA ── */
   if(tab==='cellar'){
-    if(!cellar.length) html+=`<div class="empty"><span style="font-size:48px;display:block;margin-bottom:16px;opacity:.4">🍾</span>Sua adega está vazia.</div>`;
-    else cellar.forEach(wine=>{
-      html+=`<div class="wine-item" onclick="selectWine('${wine.id}')">
-        <div style="width:4px;border-radius:2px;align-self:stretch;flex-shrink:0;background:linear-gradient(180deg,#8b1a1a,#8a6a3a)"></div>
-        <div style="flex:1;min-width:0">
-          <div class="serif" style="font-size:17px;color:#f5ead8;margin-bottom:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${wine.nome}</div>
-          <div style="font-size:9px;letter-spacing:2px;color:#8a6a3a;text-transform:uppercase">${[wine.vinicola,wine.ano,wine.uva].filter(Boolean).join(' · ')}</div>
-          <div style="margin-top:6px;display:flex;gap:6px;flex-wrap:wrap">
-            ${wine.tipo?`<span class="tag tag-type" style="font-size:8px">${wine.tipo}</span>`:''}
-            ${wine.pontuacao?`<span class="tag tag-year" style="font-size:8px">⭐ ${wine.pontuacao}</span>`:''}
-            ${wine.precoMedio?`<span class="tag tag-region" style="font-size:8px">${fmt(wine.precoMedio)}</span>`:''}
+    if(!cellar.length){
+      html+=`<div class="empty"><span style="font-size:56px;display:block;margin-bottom:20px;opacity:.3">🍾</span>Sua adega está vazia.<br><br>Escaneie um rótulo para começar.</div>`;
+    } else {
+      cellar.forEach(wine=>{
+        const color = wine.tipo==='Tinto'?'#7b2d3e':wine.tipo==='Branco'?'#c8a84b':wine.tipo==='Espumante'?'#8fb3a8':'#9c4a1a';
+        html+=`<div class="wine-item" onclick="selectWine('${wine.id}')">
+          <div style="width:4px;border-radius:2px;align-self:stretch;flex-shrink:0;background:linear-gradient(180deg,${color},${color}55)"></div>
+          <div style="flex:1;min-width:0">
+            <div class="serif" style="font-size:17px;color:#e8dcc8;margin-bottom:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${wine.nome}</div>
+            <div style="font-size:9px;letter-spacing:2px;color:#8a6a3a;text-transform:uppercase;margin-bottom:6px">${[wine.vinicola,wine.ano,wine.uva].filter(Boolean).join(' · ')}</div>
+            <div style="display:flex;gap:5px;flex-wrap:wrap">
+              ${wine.tipo?`<span class="tag tag-type" style="font-size:8px">${wine.tipo}</span>`:''}
+              ${wine.pontuacao?`<span class="tag tag-year" style="font-size:8px">⭐ ${wine.pontuacao}</span>`:''}
+              ${wine.precoMedio?`<span class="tag tag-region" style="font-size:8px">${fmt(wine.precoMedio)}</span>`:''}
+            </div>
           </div>
-        </div>
-        <div style="text-align:right;flex-shrink:0">
-          <span class="serif" style="font-size:22px;color:#c9a96e;display:block">${wine.quantidade}</span>
-          <span style="font-size:8px;letter-spacing:2px;color:#7a6a5a;text-transform:uppercase">garrafa${wine.quantidade!==1?'s':''}</span>
-          <div style="font-size:9px;color:#7a6a5a;margin-top:4px">${fmtDate(wine.dataEntrada)}</div>
-        </div>
-      </div>`;
-    });
+          <div style="text-align:right;flex-shrink:0">
+            <span class="serif" style="font-size:24px;color:#c9a84c;display:block;font-weight:700">${wine.quantidade}</span>
+            <span style="font-size:8px;letter-spacing:2px;color:#665a4e;text-transform:uppercase">garrafa${wine.quantidade!==1?'s':''}</span>
+            <div style="font-size:9px;color:#665a4e;margin-top:4px">${fmtDate(wine.dataEntrada)}</div>
+          </div>
+        </div>`;
+      });
+    }
   }
 
+  /* ── SOMMELIER IA ── */
+  if(tab==='sommelier'){
+    html+=`
+    <div style="margin-bottom:16px;animation:fadeIn .3s ease">
+      <div class="serif" style="font-size:20px;color:#e8dcc8;margin-bottom:4px">Sommelier Virtual</div>
+      <div style="font-size:11px;color:#665a4e;letter-spacing:1px">Powered by Claude · IA</div>
+    </div>
+    <div class="chat-wrap">
+      <div class="chat-messages" id="chatMessages"></div>
+      <div class="chat-input-row">
+        <input id="chatInput" class="chat-input" type="text" placeholder="Pergunte ao sommelier..." onkeydown="if(event.key==='Enter')sendChat()">
+        <button class="chat-send" onclick="sendChat()" id="chatSendBtn">→</button>
+      </div>
+    </div>
+    <div style="margin-top:14px">
+      <div style="font-size:9px;letter-spacing:3px;color:#665a4e;text-transform:uppercase;margin-bottom:10px">Sugestões</div>
+      <div style="display:flex;flex-wrap:wrap;gap:6px">
+        ${['Harmonização com picanha?','Melhor tinto para presentear?','Qual tem melhor custo-benefício?','Vinho para comemorar?'].map(q=>
+          `<button onclick="useSuggestion('${q}')" style="background:#1a1218;border:1px solid #2a1e28;border-radius:20px;padding:7px 12px;color:#8a7a6a;font-size:11px;cursor:pointer;font-family:'Josefin Sans',sans-serif;transition:all .2s">${q}</button>`
+        ).join('')}
+      </div>
+    </div>`;
+  }
+
+  /* ── STATS ── */
   if(tab==='stats'){
     html+=`<div class="stats-grid">
-      ${[[cellar.length,'Rótulos'],[total,'Garrafas'],[avgScore||'—','Pontuação média'],[totalVal>0?`R$${Math.round(totalVal)}`:'—','Valor estimado']].map(([v,l])=>`
+      ${[[cellar.length,'Rótulos','🍷'],[total,'Garrafas','🍾'],[avgScore||'—','Pontuação média','⭐'],[totalVal>0?`R$${Math.round(totalVal).toLocaleString('pt-BR')}`:'—','Valor estimado','💰']].map(([v,l,ic])=>`
       <div class="stats-box">
-        <span class="serif" style="font-size:32px;color:#c9a96e;display:block">${v}</span>
-        <span style="font-size:9px;letter-spacing:3px;color:#7a6a5a;text-transform:uppercase">${l}</span>
+        <div style="font-size:22px;margin-bottom:8px">${ic}</div>
+        <span class="serif" style="font-size:28px;color:#c9a84c;display:block;font-weight:700">${v}</span>
+        <span style="font-size:9px;letter-spacing:3px;color:#665a4e;text-transform:uppercase">${l}</span>
       </div>`).join('')}
     </div>`;
-    if(!cellar.length) html+=`<div class="empty"><span style="font-size:48px;display:block;margin-bottom:16px;opacity:.4">📊</span>Nenhum dado ainda.</div>`;
-    [...cellar].sort((a,b)=>(b.pontuacao||0)-(a.pontuacao||0)).slice(0,5).forEach((wine,i)=>{
-      html+=`<div class="wine-item" onclick="selectWine('${wine.id}')">
-        <div class="serif" style="font-size:22px;color:#8a6a3a;min-width:28px">${i+1}</div>
-        <div style="flex:1"><div class="serif" style="font-size:16px;color:#f5ead8">${wine.nome}</div>
-        <div style="font-size:9px;letter-spacing:2px;color:#8a6a3a;text-transform:uppercase">${wine.vinicola} · ${wine.ano}</div></div>
-        <div style="text-align:right">
-          <span class="serif" style="font-size:22px;color:#c9a96e;display:block">${wine.pontuacao??'—'}</span>
-          <span style="font-size:8px;color:#7a6a5a;text-transform:uppercase;letter-spacing:2px">pts</span>
-        </div>
-      </div>`;
-    });
+    if(!cellar.length){
+      html+=`<div class="empty"><span style="font-size:48px;display:block;margin-bottom:16px;opacity:.3">📊</span>Nenhum dado ainda.</div>`;
+    } else {
+      html+=`<div style="font-size:9px;letter-spacing:3px;color:#665a4e;text-transform:uppercase;margin-bottom:12px">Top por pontuação</div>`;
+      [...cellar].sort((a,b)=>(b.pontuacao||0)-(a.pontuacao||0)).slice(0,5).forEach((wine,i)=>{
+        html+=`<div class="wine-item" onclick="selectWine('${wine.id}')">
+          <div class="serif" style="font-size:22px;color:#c9a84c44;min-width:28px;font-weight:700">${i+1}</div>
+          <div style="flex:1">
+            <div class="serif" style="font-size:16px;color:#e8dcc8">${wine.nome}</div>
+            <div style="font-size:9px;letter-spacing:2px;color:#8a6a3a;text-transform:uppercase">${[wine.vinicola,wine.ano].filter(Boolean).join(' · ')}</div>
+          </div>
+          <div style="text-align:right">
+            <span class="serif" style="font-size:24px;color:#c9a84c;display:block;font-weight:700">${wine.pontuacao??'—'}</span>
+            <span style="font-size:8px;color:#665a4e;text-transform:uppercase;letter-spacing:2px">pts</span>
+          </div>
+        </div>`;
+      });
+    }
   }
 
   html+=`</div>`;
@@ -259,10 +406,13 @@ function render(){
   if(selected){ const w=cellar.find(x=>x.id===selected); if(w) html+=renderModal(w,false); }
 
   document.getElementById('app').innerHTML = html;
+
+  if(tab==='sommelier') renderChatMessages();
 }
 
 function setTab(t){ tab=t; result=null; error=null; render(); }
 function selectWine(id){ selected=id; render(); }
+function useSuggestion(q){ const inp=document.getElementById('chatInput'); if(inp){inp.value=q;inp.focus();} }
 
 render();
 </script>
